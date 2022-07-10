@@ -17,10 +17,12 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_facebook_auth: ^4.4.0
+  flutter_spinkit: ^5.1.0
   get: ^4.6.5
   google_fonts: ^3.0.1
   google_sign_in: ^5.3.3
   image_picker: ^0.8.5+3
+  progress_state_button: ^1.0.4
   twitter_login: ^4.2.3
 
 dev_dependencies:

@@ -11,8 +11,6 @@ class AuthWithButton extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () async{
-        
-
             await AuthController.instance.signinWithGoogle();
           },
           child: _signupWithIcon(

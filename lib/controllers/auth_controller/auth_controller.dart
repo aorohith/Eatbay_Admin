@@ -13,9 +13,13 @@ class AuthController extends GetxController {
   FirebaseAuth auth = FirebaseAuth.instance;
   final googleSignin = GoogleSignIn();
   GoogleSignInAccount? gUser;
+  late TwitterLogin twitterLogin;
+  late String loginType;
+  var isLoading = false.obs;
 
   signinWithGoogle() async {
     try {
+      isLoading.value = true;
       final googleUser = await googleSignin.signIn();
       if (googleUser == null) {
         return;
@@ -31,10 +35,11 @@ class AuthController extends GetxController {
 
       //once signed in, return the UserCredential
       await FirebaseAuth.instance.signInWithCredential(credential);
+      loginType = 'google';
     } catch (e) {
       print(e.toString());
     }
-
+    isLoading.value = false;
     update();
   }
 
@@ -72,7 +77,7 @@ class AuthController extends GetxController {
   signInWithTwitter() async {
     try {
       // Create a TwitterLogin instance
-      final twitterLogin = TwitterLogin(
+      twitterLogin = TwitterLogin(
         apiKey: 'jWrVprX8qJJE5o7TXoF5ix8IE',
         apiSecretKey: 'oPkjD8DXAiRjaT2P9gOpccn5RCJPnUB1QEl9Mof0fJB6jze5ZG',
         redirectURI: "flutter-twitter-login://",
@@ -91,8 +96,8 @@ class AuthController extends GetxController {
       });
 
       // Once signed in, return the UserCredential
-      return await FirebaseAuth.instance
-          .signInWithCredential(twitterAuthCredential);
+      await FirebaseAuth.instance.signInWithCredential(twitterAuthCredential);
+      loginType = 'twitter';
     } catch (e) {}
   }
 
@@ -106,16 +111,21 @@ class AuthController extends GetxController {
           FacebookAuthProvider.credential(loginResult.accessToken!.token);
 
       // Once signed in, return the UserCredential
-      return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);  
+      await FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+      loginType = 'facebook';
+      print(loginType);
     } catch (e) {}
   }
 
   void logout() async {
-    if (googleSignin.currentUser != null) {
+    // if (loginType == 'google') {
       await googleSignin.disconnect();
-    } else {
-      // await twitterLogin.disconnect();
-    }
+    // } else if (loginType == 'facebook') {
+      await FacebookAuth.i.logOut();
+    // }
+    //  else{
+      // await twitterLogin.
+    //  }
     await auth.signOut();
     update();
   }

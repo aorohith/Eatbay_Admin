@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:eatbay_admin/controllers/add_product_controller.dart';
 import 'package:eatbay_admin/models/product_model.dart';
 import 'package:eatbay_admin/views/widgets/core/constant.dart';
+import 'package:eatbay_admin/views/widgets/shared/loading.dart';
 import 'package:eatbay_admin/views/widgets/signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -20,6 +21,7 @@ class AddProductPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final add = AddProductController.instance;
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
@@ -37,13 +39,16 @@ class AddProductPage extends StatelessWidget {
                       height: 230,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: addProductController.isImagePathSet == true
-                                  ? FileImage(File(addProductController
-                                      .productImagePath.value)) as ImageProvider
-                                  : const AssetImage(
-                                      "assets/images/product_default_image.jpg"))),
+                        image: DecorationImage(
+                          fit: BoxFit.cover,
+                          image: addProductController.isImagePathSet.value ==
+                                  true
+                              ? FileImage(File(addProductController
+                                  .productImagePath.value)) as ImageProvider
+                              : const AssetImage(
+                                  "assets/images/product_default_image.jpg"),
+                        ),
+                      ),
                     ),
                   ),
                   h10,
@@ -81,7 +86,6 @@ class AddProductPage extends StatelessWidget {
                   h20,
                   TextFormField(
                     controller: priceController,
-                    
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                         border: OutlineInputBorder(), labelText: "Price"),
@@ -102,19 +106,19 @@ class AddProductPage extends StatelessWidget {
                     ),
                   ),
                   h20,
-                  LoginButton(
-                    text: "Add New",
-                    onClick: () {
-                      Product productData = Product(
-                        name: nameController.text.trim(),
-                        price: double.parse(priceController.text.trim()),
-                        description: descriptionController.text,
-                        imageUrl: "",
-                      );
+                  Obx(() => add.isLoading.value ? Loading() : LoginButton(
+                        text: "Add New",
+                        onClick: () {
+                          Product productData = Product(
+                            name: nameController.text.trim(),
+                            price: double.parse(priceController.text.trim()),
+                            description: descriptionController.text,
+                            imageUrl: "",
+                          );
 
-                      addProductController.addNewProduct(productData);
-                    },
-                  ),
+                          addProductController.addNewProduct(productData);
+                        },
+                      )),
                 ],
               ),
             ),

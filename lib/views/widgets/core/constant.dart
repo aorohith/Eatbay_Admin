@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+late double size;
 const SizedBox h10 = SizedBox(height: 10);
 const SizedBox h20 = SizedBox(height: 20);
 const SizedBox h30 = SizedBox(height: 30);
