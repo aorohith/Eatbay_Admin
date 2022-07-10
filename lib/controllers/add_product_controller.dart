@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:eatbay_admin/models/product_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/state_manager.dart';
@@ -16,7 +17,7 @@ class AddProductController extends GetxController{
   }
 
 
-  Future<void> addNewProduct(Map productdata) async {
+  Future<void> addNewProduct(Product productdata) async {
     var pathimage = productImagePath.value.toString();
     var temp = pathimage.lastIndexOf('/');
     var result = pathimage.substring(temp + 1);
@@ -25,21 +26,23 @@ class AddProductController extends GetxController{
         FirebaseStorage.instance.ref().child('product_images').child(result);
     var response = await ref.putFile(File(productImagePath.value));
     print("Updated $response");
-    var imageUrl = await ref.getDownloadURL();
+    var imageUrl = await ref.getDownloadURL();//got the storage image url
 
     try {
+        productdata.imageUrl = imageUrl;
+        productdata.id = firebaseInstance.collection('productlist').doc().id;
+        final data = productdata.toJson();
       // CommanDialog.showLoading();
-      var response = await firebaseInstance.collection('productlist').add({
-        'product_name': productdata['p_name'],
-        'product_price': productdata['p_price'],
-        'product_image': imageUrl,
-      });
+      var response = await firebaseInstance.collection('productlist').add(data);
       print("Firebase response1111 $response");
+      
       // CommanDialog.hideLoading();
       Get.back();
+      Get.snackbar("title", "Product Added");
     } catch (exception) {
       // CommanDialog.hideLoading();
       print("Error Saving Data at firestore $exception");
+      Get.snackbar("title", exception.toString());
     }
   }
 

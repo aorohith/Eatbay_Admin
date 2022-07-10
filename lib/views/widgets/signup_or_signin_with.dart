@@ -20,13 +20,23 @@ class AuthWithButton extends StatelessWidget {
                 'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-icon-logo-png-transparent-svg-vector-bie-supply-14.png',
           ),
         ),
-        _signupWithIcon(
-          url:
-              'https://www.kindpng.com/picc/m/225-2252495_logo-twitter-bulat-clipart-png-download-square-twitter.png',
+        GestureDetector(
+          onTap: ()async {
+            await AuthController.instance.signInWithTwitter();
+          },
+          child: _signupWithIcon(
+            url:
+                'https://www.kindpng.com/picc/m/225-2252495_logo-twitter-bulat-clipart-png-download-square-twitter.png',
+          ),
         ),
-        _signupWithIcon(
-          url:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zM12PHwwSmEbr9VQGaWngPxLt5bb1G5NWQ&usqp=CAU',
+        GestureDetector(
+          onTap: () async{
+            await AuthController.instance.signInWithFacebook();
+          },
+          child: _signupWithIcon(
+            url:
+                'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3zM12PHwwSmEbr9VQGaWngPxLt5bb1G5NWQ&usqp=CAU',
+          ),
         ),
       ],
     );

@@ -1,3 +1,4 @@
+import 'package:eatbay_admin/models/product_model.dart';
 import 'package:eatbay_admin/views/product_section.dart/add_product_page.dart';
 import 'package:eatbay_admin/views/widgets/big_text.dart';
 import 'package:eatbay_admin/views/widgets/core/colors.dart';
@@ -7,14 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class AdminProductDetailPage extends StatelessWidget {
-  const AdminProductDetailPage({Key? key}) : super(key: key);
+  Product product;
+  AdminProductDetailPage({
+    Key? key,
+    required this.product,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(children: [
         //image section
-        const DetailImageSection(),
+         DetailImageSection(imagePath: product.imageUrl,),
         //top buttons
         _topButtons(),
         //center descriptioin
@@ -36,12 +41,16 @@ class AdminProductDetailPage extends StatelessWidget {
           RoundButton(
             icon: Icons.arrow_back_ios_new,
             color: AppColors.mainColor,
-            onClick: () {Get.back();},
+            onClick: () {
+              Get.back();
+            },
           ),
           RoundButton(
               icon: Icons.edit,
               color: AppColors.mainColor,
-              onClick: () {Get.to(AddProductPage());}),
+              onClick: () {
+                Get.to(AddProductPage());
+              }),
         ],
       ),
     );
@@ -66,16 +75,16 @@ class AdminProductDetailPage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BigText(
-                text: "Biriyani",
+                text: product.name,
                 size: 25,
               ),
               const SizedBox(
                 height: 15,
               ),
-              const Expanded(
+              Expanded(
                 child: SizedBox(
                   child: Text(
-                    "Typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                    product.description,
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w400,

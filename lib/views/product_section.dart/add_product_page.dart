@@ -1,6 +1,7 @@
 import 'dart:io';
-
 import 'package:eatbay_admin/controllers/add_product_controller.dart';
+import 'package:eatbay_admin/models/product_model.dart';
+import 'package:eatbay_admin/views/widgets/core/constant.dart';
 import 'package:eatbay_admin/views/widgets/signin_button.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,90 +18,107 @@ class AddProductPage extends StatelessWidget {
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       appBar: AppBar(
-        title: Text("Add Product"),
+        title: const Text("Add Product"),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Obx(() => Container(
-                    height: 230,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: addProductController.isImagePathSet == true
-                                ? FileImage(File(addProductController
-                                    .productImagePath.value)) as ImageProvider
-                                : NetworkImage(
-                                    "https://img.freepik.com/free-photo/juicy-american-burger-hamburger-cheeseburger-with-two-beef-patties-with-sauce-basked-black-space_124865-5964.jpg?w=2000"))),
-                  )),
-              Container(
-                height: 60,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        takeImage(ImageSource.camera);
-                      },
-                      icon: Icon(Icons.camera),
-                      label: Text("Camera"),
+        child: ListView(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Obx(
+                    () => Container(
+                      height: 230,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: addProductController.isImagePathSet == true
+                                  ? FileImage(File(addProductController
+                                      .productImagePath.value)) as ImageProvider
+                                  : const AssetImage(
+                                      "assets/images/product_default_image.jpg"))),
                     ),
-                    ElevatedButton.icon(
-                      onPressed: () {
-                        takeImage(ImageSource.gallery);
-                      },
-                      icon: Icon(Icons.collections),
-                      label: Text("Gallery"),
+                  ),
+                  h10,
+                  Container(
+                    height: 60,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                     ),
-                  ],
-                ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            takeImage(ImageSource.camera);
+                          },
+                          icon: const Icon(Icons.camera),
+                          label: const Text("Camera"),
+                        ),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            takeImage(ImageSource.gallery);
+                          },
+                          icon: const Icon(Icons.collections),
+                          label: const Text("Gallery"),
+                        ),
+                      ],
+                    ),
+                  ),
+                  h10,
+                  TextFormField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Food Name"),
+                  ),
+                  h20,
+                  TextFormField(
+                    controller: priceController,
+                    
+                    keyboardType: TextInputType.number,
+                    decoration: const InputDecoration(
+                        border: OutlineInputBorder(), labelText: "Price"),
+                  ),
+                  h20,
+                  SizedBox(
+                    height: 200,
+                    child: TextFormField(
+                      controller: descriptionController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: "Description",
+                        contentPadding:
+                            EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      ),
+                    ),
+                  ),
+                  h20,
+                  LoginButton(
+                    text: "Add New",
+                    onClick: () {
+                      Product productData = Product(
+                        name: nameController.text.trim(),
+                        price: double.parse(priceController.text.trim()),
+                        description: descriptionController.text,
+                        imageUrl: "",
+                      );
+
+                      addProductController.addNewProduct(productData);
+                    },
+                  ),
+                ],
               ),
-              TextFormField(
-                controller: nameController,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Food Name"),
-              ),
-              TextFormField(
-                controller: priceController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: "Price"),
-              ),
-              TextFormField(
-                controller: descriptionController,
-                maxLines: 4,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: "Description",
-                  contentPadding: EdgeInsets.symmetric(vertical: 45),
-                ),
-              ),
-              LoginButton(
-                  text: "Add New",
-                  onClick: () {
-                    Map<String, dynamic> productData = {
-                      "p_name": nameController.text.trim(),
-                      "p_price": priceController.text.trim(),
-                      "p_upload_date": DateTime.now().millisecondsSinceEpoch,
-                      "phone_number": descriptionController.text.trim()
-                    };
-                    addProductController.addNewProduct(productData);
-                  }),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -111,6 +129,5 @@ class AddProductPage extends StatelessWidget {
         await imagePicker.pickImage(source: source, imageQuality: 100);
     pickedFile = File(pickedImage!.path);
     addProductController.setProductImagePath(pickedFile!.path);
-    print(addProductController.isImagePathSet);
   }
 }
