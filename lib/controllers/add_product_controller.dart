@@ -3,8 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:eatbay_admin/models/product_model.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
-import 'package:get/get_navigation/get_navigation.dart';
-import 'package:get/state_manager.dart';
 
 class AddProductController extends GetxController {
   static AddProductController instance = Get.find();
@@ -12,6 +10,7 @@ class AddProductController extends GetxController {
   var productImagePath = ''.obs;
   final firebaseInstance = FirebaseFirestore.instance;
   var isLoading = false.obs;
+ 
 
   void setProductImagePath(path) {
     productImagePath.value = path;
