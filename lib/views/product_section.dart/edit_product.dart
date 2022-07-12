@@ -8,20 +8,23 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
-class AddProductPage extends StatelessWidget {
+class EditProductPage extends StatelessWidget {
   File? pickedFile;
+  Product product;
   ImagePicker imagePicker = ImagePicker();
 
-  AddProductPage({Key? key}) : super(key: key);
+  EditProductPage({Key? key, required this.product}) : super(key: key);
 
   AddProductController addProductController = Get.put(AddProductController());
-  final nameController = TextEditingController();
-  final priceController = TextEditingController();
-  final descriptionController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final nameController = TextEditingController(text: product.name);
+    final priceController =
+        TextEditingController(text: product.price.toString());
+    final descriptionController =
+        TextEditingController(text: product.description);
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
     final add = AddProductController.instance;
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -48,8 +51,7 @@ class AddProductPage extends StatelessWidget {
                                     true
                                 ? FileImage(File(addProductController
                                     .productImagePath.value)) as ImageProvider
-                                : const AssetImage(
-                                    "assets/images/product_default_image.jpg"),
+                                : NetworkImage(product.imageUrl),
                           ),
                         ),
                       ),
@@ -121,19 +123,15 @@ class AddProductPage extends StatelessWidget {
                     Obx(() => add.isLoading.value
                         ? Loading()
                         : LoginButton(
-                            text: "Add New",
+                            text: "Update",
                             onClick: () {
                               if (!_formKey.currentState!.validate()) {
                                 return;
                               }
-                              Product productData = Product(
-                                name: nameController.text.trim(),
-                                price:
-                                    double.parse(priceController.text.trim()),
-                                description: descriptionController.text,
-                                imageUrl: "",
-                              );
-                              addProductController.addNewProduct(productData);
+                              product.name = nameController.text.trim();
+                              product.price = double.parse(priceController.text.trim());
+                              product.description = descriptionController.text;
+                              addProductController.updateProduct(product);
                             },
                           )),
                   ],

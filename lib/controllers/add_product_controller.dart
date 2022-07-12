@@ -10,7 +10,7 @@ class AddProductController extends GetxController {
   var productImagePath = ''.obs;
   final firebaseInstance = FirebaseFirestore.instance;
   var isLoading = false.obs;
- 
+  var imageUrl;
 
   void setProductImagePath(path) {
     productImagePath.value = path;
@@ -25,13 +25,14 @@ class AddProductController extends GetxController {
     final ref =
         FirebaseStorage.instance.ref().child('product_images').child(result);
     var response = await ref.putFile(File(productImagePath.value));
-    var imageUrl = await ref.getDownloadURL(); //got the storage image url
+    imageUrl = await ref.getDownloadURL(); //got the storage image url
 
     try {
       productdata.imageUrl = imageUrl;
-      productdata.id = firebaseInstance.collection('productlist').doc().id;
-      final data = productdata.toJson();
-      var response = await firebaseInstance.collection('productlist').add(data);
+      final docUser = firebaseInstance.collection('productlist').doc();
+      productdata.id = docUser.id;
+      final json = productdata.toJson();
+      var response = await docUser.set(json);
       Get.back();
       Get.snackbar(
         "title",
@@ -48,6 +49,48 @@ class AddProductController extends GetxController {
     }
     isLoading.value = false;
     isImagePathSet.value = false;
+    productImagePath.value = '';
+    update();
+  }
+
+  Future<void> updateProduct(Product productdata) async {
+    isLoading.value = true;
+    if (isImagePathSet.value) {
+      var pathimage = productImagePath.value.toString();
+      var temp = pathimage.lastIndexOf('/');
+      var result = pathimage.substring(temp + 1);
+      final ref =
+          FirebaseStorage.instance.ref().child('product_images').child(result);
+      var response = await ref.putFile(File(productImagePath.value));
+      imageUrl = await ref.getDownloadURL(); //got the storage image url
+    }
+
+    try {
+      if (isImagePathSet.value) {
+        productdata.imageUrl = imageUrl;
+      }
+      final data = productdata.toJson();
+      final docUser = FirebaseFirestore.instance.collection('productlist').doc(productdata.id);
+      docUser.update(data);
+
+      // var response = await firebaseInstance.collection('productlist').add(data);
+      Get.back();
+      Get.snackbar(
+        "title",
+        "Product Updated",
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } catch (exception) {
+      print(exception.toString());
+      Get.snackbar(
+        "title",
+        exception.toString(),
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+    isLoading.value = false;
+    isImagePathSet.value = false;
+    productImagePath.value = '';
     update();
   }
 }

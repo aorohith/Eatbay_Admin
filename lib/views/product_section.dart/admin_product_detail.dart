@@ -1,5 +1,5 @@
 import 'package:eatbay_admin/models/product_model.dart';
-import 'package:eatbay_admin/views/product_section.dart/add_product_page.dart';
+import 'package:eatbay_admin/views/product_section.dart/edit_product.dart';
 import 'package:eatbay_admin/views/widgets/big_text.dart';
 import 'package:eatbay_admin/views/widgets/core/colors.dart';
 import 'package:eatbay_admin/views/widgets/detail_image_view.dart';
@@ -49,7 +49,7 @@ class AdminProductDetailPage extends StatelessWidget {
               icon: Icons.edit,
               color: AppColors.mainColor,
               onClick: () {
-                Get.to(AddProductPage());
+                Get.to(EditProductPage(product: product,));
               }),
         ],
       ),

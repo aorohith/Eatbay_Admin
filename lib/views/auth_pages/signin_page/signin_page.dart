@@ -18,65 +18,66 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        h30,
-                        h30,
-                        Container(
-                          height: 100,
-                          width: 100,
-                          decoration: const BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                'https://thumbs.dreamstime.com/b/food-delivery-logo-food-delivery-logo-vector-template-157000359.jpg',
-                              ),
-                            ),
-                          ),
-                        ),
-                        h30,
-                        Text(
-                          "Welcome Back Chief.!!",
-                          style: TextStyle(
-                              color: AppColors.mainColor, fontSize: 25),
-                        ),
-                        h30,
-                        IconTextFiield(
-                            icon: Icons.email,
-                            hintText: "Admin Email",
-                            controller: emailController),
-                        IconTextFiield(
-                          icon: Icons.password,
-                          hintText: "Password",
-                          controller: passwordController,
-                        ),
-                        LoginButton(
-                          text: "Sign In",
-                          onClick: () {
-                            AuthController.instance.signin(
-                              emailController.text.trim(),
-                              passwordController.text.trim(),
-                            );
-                          },
-                        ),
-                        h30,
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SmallText(
-                              text: "Contact Team",
-                              size: 18,
-                            ),
-                            BigText(text: " Forgot?"),
-                          ],
-                        ),
-                        h20,
-                        AuthWithButton(),
-                      ],
+          child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              h30,
+              h30,
+              Container(
+                height: 100,
+                width: 100,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      'https://thumbs.dreamstime.com/b/food-delivery-logo-food-delivery-logo-vector-template-157000359.jpg',
                     ),
-                  )
-      ),
+                  ),
+                ),
+              ),
+              h30,
+              Text(
+                "Welcome Back Chief.!!",
+                style: TextStyle(color: AppColors.mainColor, fontSize: 25),
+              ),
+              h30,
+              IconTextFiield(
+                  icon: Icons.email,
+                  hintText: "Admin Email",
+                  controller: emailController),
+              IconTextFiield(
+                icon: Icons.password,
+                hintText: "Password",
+                controller: passwordController,
+              ),
+              LoginButton(
+                text: "Sign In",
+                onClick: () {
+                  AuthController.instance.signin(
+                    emailController.text.trim(),
+                    passwordController.text.trim(),
+                  );
+                },
+              ),
+              h30,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SmallText(
+                    text: "Contact Team",
+                    size: 18,
+                  ),
+                  BigText(text: " Forgot?"),
+                ],
+              ),
+              h20,
+              AuthWithButton(),
+            ],
+          ),
+        ),
+      )),
     );
   }
 }

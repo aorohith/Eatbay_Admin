@@ -1,8 +1,8 @@
 class Product {
   String id;
-  final String name;
-  final double price;
-  final String description;
+   String name;
+   double price;
+   String description;
   String imageUrl;
 
   Product({
@@ -21,6 +21,7 @@ class Product {
       };
 
   static Product fromJson(Map<String, dynamic> json) => Product(
+        id: json['id'],
         name: json['name'],
         price: json['price'],
         description: json['description'],
