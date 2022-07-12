@@ -1,7 +1,9 @@
+import 'package:eatbay_admin/controllers/add_product_controller.dart';
 import 'package:eatbay_admin/models/product_model.dart';
 import 'package:eatbay_admin/views/product_section.dart/edit_product.dart';
 import 'package:eatbay_admin/views/widgets/big_text.dart';
 import 'package:eatbay_admin/views/widgets/core/colors.dart';
+import 'package:eatbay_admin/views/widgets/core/constant.dart';
 import 'package:eatbay_admin/views/widgets/detail_image_view.dart';
 import 'package:eatbay_admin/views/widgets/round_button.dart';
 import 'package:flutter/material.dart';
@@ -14,12 +16,16 @@ class AdminProductDetailPage extends StatelessWidget {
     required this.product,
   }) : super(key: key);
 
+  final controller = Get.put(AddProductController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Stack(children: [
         //image section
-         DetailImageSection(imagePath: product.imageUrl,),
+        DetailImageSection(
+          imagePath: product.imageUrl,
+        ),
         //top buttons
         _topButtons(),
         //center descriptioin
@@ -45,12 +51,54 @@ class AdminProductDetailPage extends StatelessWidget {
               Get.back();
             },
           ),
-          RoundButton(
-              icon: Icons.edit,
-              color: AppColors.mainColor,
-              onClick: () {
-                Get.to(EditProductPage(product: product,));
-              }),
+          Row(
+            children: [
+              RoundButton(
+                  icon: Icons.edit,
+                  color: AppColors.mainColor,
+                  onClick: () {
+                    Get.to(EditProductPage(
+                      product: product,
+                    ));
+                  }),
+              w20,
+              RoundButton(
+                  icon: Icons.delete,
+                  color: Colors.redAccent,
+                  onClick: () {
+                    Get.defaultDialog(
+                      title: "Are you Sure to Delete?",
+                      content: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: Text(
+                              "Back",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.greenAccent),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              controller.deleteProduct(product);
+                            },
+                            child: Text(
+                              "Delete",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.redAccent),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+            ],
+          )
         ],
       ),
     );

@@ -40,7 +40,6 @@ class AddProductController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     } catch (exception) {
-      print(exception.toString());
       Get.snackbar(
         "title",
         exception.toString(),
@@ -92,5 +91,11 @@ class AddProductController extends GetxController {
     isImagePathSet.value = false;
     productImagePath.value = '';
     update();
+  }
+
+  deleteProduct(Product product){
+    final docProduct = FirebaseFirestore.instance.collection('productlist').doc(product.id);
+    docProduct.delete();
+    Get.back();
   }
 }
